@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void runShell(QString inputPath);
+    void runShell(QString inputPath,int step);
 
 protected:
     QString input_path;

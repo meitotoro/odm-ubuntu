@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QProcess>
 #include<QMessageBox>
+#include <QMessageBox>
+#include <QDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -43,7 +45,7 @@ void MainWindow::on_outputButton_clicked()
     Output_path=filePath;
     
 }
-void MainWindow::runShell(QString inputPath){
+void MainWindow::runShell(QString inputPath,int step){
     QProcess *proc = new QProcess;
     QDir dir(inputPath);
     dir.cdUp();
@@ -68,11 +70,20 @@ void MainWindow::runShell(QString inputPath){
 
     connect(proc,&QProcess::readyReadStandardOutput,
             [&](){
-
         QByteArray procOutput;
         procOutput=proc->readAllStandardOutput();
         qDebug() << procOutput.data();
         out<<procOutput<<endl;
+        QString str = QString(QLatin1String(procOutput.data()));
+        if(str.indexOf("running PYTHONPATH")>0){
+            step=step+10;
+            ui->progressBar->setValue(step);
+        }
+        if(str.indexOf("OpenDroneMap app finished")>0){
+            ui->progressBar->setValue(100);
+            QMessageBox::information(this,"tishi","finished!",QMessageBox::Ok);
+
+        }
     }
     );
     proc->start(command);
@@ -105,5 +116,9 @@ void MainWindow::runShell(QString inputPath){
 
 void MainWindow::on_startButton_clicked()
 {
-    runShell(input_path);
+    ui->progressBar->setMinimum(0);
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
+    const int step=0;
+    runShell(input_path,step);
 }
