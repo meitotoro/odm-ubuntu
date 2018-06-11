@@ -25,10 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    replytimeout.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    replytimeout.h
 
 FORMS += \
         mainwindow.ui
+
+QT += network
